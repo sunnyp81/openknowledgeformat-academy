@@ -1,0 +1,2 @@
+# Canonical host: redirect www to the apex domain (301).
+https://www.openknowledgeformat.academy/* https://openknowledgeformat.academy/:splat 301!

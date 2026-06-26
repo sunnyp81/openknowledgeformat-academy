@@ -1,0 +1,6 @@
+# Cloudflare Pages config. Git-connected builds use the dashboard settings
+# (build command `npm run build`, output `dist`, NODE_VERSION=22); this file
+# also supports `wrangler pages deploy dist` for direct uploads.
+name = "openknowledgeformat-academy"
+compatibility_date = "2026-06-27"
+pages_build_output_dir = "dist"
