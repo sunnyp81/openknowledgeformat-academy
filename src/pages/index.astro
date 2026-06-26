@@ -1,0 +1,190 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_ORIGIN } from '../consts';
+
+const cards = [
+  {
+    href: '/what-is-open-knowledge-format/',
+    title: 'What is OKF?',
+    desc: 'The pillar guide: definition, bundle structure, the required type field, and design principles.',
+    tag: 'Start here',
+  },
+  {
+    href: '/open-knowledge-format-examples/',
+    title: 'OKF examples',
+    desc: 'Six copy-paste concept documents, a sample bundle tree, plus index.md and log.md.',
+  },
+  {
+    href: '/okf-starter-template/',
+    title: 'Starter template',
+    desc: 'A free, spec-conformant bundle to clone and adapt for your own knowledge.',
+  },
+  {
+    href: '/okf-vs-llms-txt/',
+    title: 'OKF vs llms.txt',
+    desc: 'A portable knowledge bundle format versus a single web-root navigation file.',
+  },
+  {
+    href: '/okf-vs-rag/',
+    title: 'OKF vs RAG',
+    desc: 'A content format versus a retrieval architecture, and how the two combine.',
+  },
+  {
+    href: '/glossary/',
+    title: 'Glossary',
+    desc: 'Plain definitions for bundle, concept, frontmatter, type, index.md, log.md, and more.',
+  },
+];
+
+const faq = [
+  {
+    q: 'What is the Open Knowledge Format?',
+    a: 'OKF is an open specification (v0.1) published by Google Cloud on 12 June 2026. It defines a portable way to package the metadata, context, and curated knowledge that AI agents and people need, using plain markdown files with YAML frontmatter.',
+  },
+  {
+    q: 'Do I need special software to use OKF?',
+    a: 'No. An OKF bundle is just a directory of UTF-8 markdown files. If you can read a text file, you can read OKF. If you can clone a git repository, you can ship it. There is no required SDK, runtime, or account.',
+  },
+  {
+    q: 'Is OKF an SEO ranking technique?',
+    a: 'No. OKF is a format for packaging knowledge so AI agents and humans can consume it consistently. It is not a search ranking hack and does not boost rankings.',
+  },
+  {
+    q: 'Is this website run by Google?',
+    a: 'No. This is an independent educational resource. It is not affiliated with, endorsed by, or sponsored by Google.',
+  },
+];
+
+const faqSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({
+    '@type': 'Question',
+    name: f.q,
+    acceptedAnswer: { '@type': 'Answer', text: f.a },
+  })),
+};
+
+const why = [
+  ['Human-readable without tooling', 'A bundle is plain markdown. If you can open a text file, you can read it. No proprietary viewer required.'],
+  ['Agent-parseable without SDKs', 'The conventions are simple enough for an agent to consume directly, so different agents can read knowledge from different producers without translation.'],
+  ['Diffable and portable', 'Bundles are files in a directory. They version-control cleanly and move between tools, organisations, and time without lock-in.'],
+  ['No central gatekeeper', 'There is no schema registry, required runtime, or proprietary account. The only required frontmatter field is type.'],
+];
+---
+<BaseLayout
+  title="Open Knowledge Format (OKF): Resources & Guides"
+  description="An independent resource for Google’s Open Knowledge Format (OKF): plain-language guides, examples, a starter template, comparisons, and a glossary."
+  schemas={[faqSchema]}
+>
+  <!-- Hero -->
+  <section class="relative overflow-hidden">
+    <div
+      class="pointer-events-none absolute inset-0 -z-10 opacity-70"
+      style="background: radial-gradient(60% 60% at 50% 0%, var(--color-accent-soft), transparent 70%);"
+      aria-hidden="true"></div>
+    <div class="mx-auto max-w-4xl px-4 sm:px-6 pt-16 pb-12 text-center">
+      <p class="inline-flex items-center gap-2 rounded-full border border-line bg-white/60 px-3 py-1 text-xs font-medium text-accent-ink">
+        <span class="h-1.5 w-1.5 rounded-full bg-accent" aria-hidden="true"></span>
+        Open spec v0.1 · published by Google Cloud, 12 June 2026
+      </p>
+      <h1 class="mt-5 text-4xl sm:text-5xl font-bold tracking-tight text-ink text-balance">
+        Open Knowledge Format resources, examples, templates, and tutorials
+      </h1>
+      <p class="mx-auto mt-5 max-w-2xl text-lg text-ink-soft text-pretty">
+        A practical, independent guide to Google’s Open Knowledge Format (OKF):
+        what it is, how a bundle is structured, and how to start. Plain language,
+        always pointing back to the primary sources.
+      </p>
+      <div class="mt-8 flex flex-wrap items-center justify-center gap-3">
+        <a href="/what-is-open-knowledge-format/" class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white shadow-sm transition-colors hover:bg-accent-ink">
+          Read: What is OKF?
+        </a>
+        <a href="/okf-starter-template/" class="rounded-lg border border-line bg-white/70 px-5 py-3 text-sm font-semibold text-ink-soft transition-colors hover:border-accent hover:text-accent">
+          Get the starter template
+        </a>
+      </div>
+      <p class="mt-6 text-xs text-muted">Independent project. Not affiliated with, endorsed by, or sponsored by Google.</p>
+    </div>
+  </section>
+
+  <!-- What is OKF teaser -->
+  <section class="mx-auto max-w-3xl px-4 sm:px-6 py-10">
+    <div class="rounded-2xl border border-line bg-white/50 p-6 sm:p-8">
+      <h2 class="text-sm font-semibold uppercase tracking-wide text-accent">What is OKF?</h2>
+      <p class="mt-3 text-ink-soft">
+        The Open Knowledge Format is a vendor-neutral, agent- and human-friendly
+        standard for the context AI systems need: metadata, descriptions, and
+        curated knowledge about your data and tools. It formalises the informal
+        “LLM-wiki” pattern into a portable, interoperable format, with no schema
+        registry, central authority, or required SDK.
+      </p>
+      <a href="/what-is-open-knowledge-format/" class="mt-4 inline-block text-sm font-semibold text-accent hover:text-accent-ink">
+        Read the full explainer &rarr;
+      </a>
+    </div>
+  </section>
+
+  <!-- Resource grid -->
+  <section class="mx-auto max-w-5xl px-4 sm:px-6 py-8" aria-labelledby="resources-heading">
+    <h2 id="resources-heading" class="text-2xl font-bold text-ink">Key resources</h2>
+    <div class="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+      {cards.map((c) => (
+        <a href={c.href} class="group relative flex flex-col rounded-xl border border-line bg-white/50 p-5 transition-all hover:border-accent hover:shadow-md">
+          {c.tag && <span class="mb-2 inline-block w-fit rounded-full bg-accent-soft px-2 py-0.5 text-[11px] font-semibold text-accent-ink">{c.tag}</span>}
+          <h3 class="font-semibold text-ink group-hover:text-accent">{c.title}</h3>
+          <p class="mt-2 text-sm text-muted">{c.desc}</p>
+          <span class="mt-3 text-sm font-semibold text-accent opacity-0 transition-opacity group-hover:opacity-100" aria-hidden="true">Open &rarr;</span>
+        </a>
+      ))}
+    </div>
+  </section>
+
+  <!-- Why OKF matters -->
+  <section class="mx-auto max-w-5xl px-4 sm:px-6 py-12" aria-labelledby="why-heading">
+    <h2 id="why-heading" class="text-2xl font-bold text-ink">Why OKF matters</h2>
+    <div class="mt-6 grid gap-6 sm:grid-cols-2">
+      {why.map(([title, desc]) => (
+        <div class="flex gap-4">
+          <span class="mt-1 grid h-8 w-8 shrink-0 place-items-center rounded-lg bg-accent-soft font-mono text-sm text-accent-ink" aria-hidden="true">{'>'}</span>
+          <div>
+            <h3 class="font-semibold text-ink">{title}</h3>
+            <p class="mt-1 text-sm text-ink-soft">{desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+  </section>
+
+  <!-- Waitlist CTA -->
+  <section class="mx-auto max-w-4xl px-4 sm:px-6 py-12" aria-labelledby="waitlist-heading">
+    <div class="rounded-2xl border border-accent/20 bg-accent-soft/60 p-8 text-center">
+      <h2 id="waitlist-heading" class="text-2xl font-bold text-ink">Join the waitlist for tutorials and templates</h2>
+      <p class="mx-auto mt-3 max-w-xl text-ink-soft">
+        We are building step-by-step tutorials, ready-to-use templates, and
+        possibly a short course and a validator. Join the waitlist to hear when
+        new material is published. No fixed dates, no spam, unsubscribe anytime.
+      </p>
+      <form
+        class="mx-auto mt-6 flex max-w-md flex-col gap-3 sm:flex-row"
+        action="https://formspree.io/f/your-form-id"
+        method="POST"
+        data-newsletter
+      >
+        <label for="email" class="sr-only">Email address</label>
+        <input
+          id="email"
+          type="email"
+          name="email"
+          required
+          placeholder="you@example.com"
+          class="flex-1 rounded-lg border border-line bg-white px-4 py-3 text-sm text-ink focus:border-accent"
+        />
+        <button type="submit" class="rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-white transition-colors hover:bg-accent-ink">
+          Join waitlist
+        </button>
+      </form>
+      <p class="mt-3 text-xs text-muted">Form endpoint is a placeholder. Connect Formspree, Buttondown, or your ESP before launch.</p>
+    </div>
+  </section>
+</BaseLayout>

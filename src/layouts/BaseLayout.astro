@@ -1,0 +1,137 @@
+---
+import '../styles/global.css';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import JsonLd from '../components/JsonLd.astro';
+import {
+  SITE_TITLE,
+  SITE_DESCRIPTION,
+  SITE_ORIGIN,
+  SITE_NAME_SHORT,
+  CRUMB_LABELS,
+} from '../consts';
+
+interface Props {
+  title: string;
+  description?: string;
+  image?: string;
+  ogType?: 'website' | 'article';
+  schemas?: Record<string, unknown>[];
+  noindex?: boolean;
+}
+
+const {
+  title,
+  description = SITE_DESCRIPTION,
+  image = '/og-default.png',
+  ogType = 'website',
+  schemas = [],
+  noindex = false,
+} = Astro.props;
+
+const path = Astro.url.pathname;
+const canonical = new URL(path, SITE_ORIGIN).href;
+const ogImage = new URL(image, SITE_ORIGIN).href;
+const fullTitle =
+  path === '/' ? title : `${title} | ${SITE_NAME_SHORT}`;
+
+// Sitewide Organization + WebSite.
+const orgSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE_ORIGIN}/#organization`,
+  name: SITE_TITLE,
+  url: `${SITE_ORIGIN}/`,
+  description:
+    'Independent educational resource for the Open Knowledge Format (OKF). Not affiliated with Google.',
+  logo: `${SITE_ORIGIN}/og-default.png`,
+};
+const siteSchema = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_ORIGIN}/#website`,
+  name: SITE_TITLE,
+  url: `${SITE_ORIGIN}/`,
+  description: SITE_DESCRIPTION,
+  publisher: { '@id': `${SITE_ORIGIN}/#organization` },
+  inLanguage: 'en',
+};
+
+// Auto BreadcrumbList from the URL path.
+const segments = path.split('/').filter(Boolean);
+const crumbItems = [
+  { name: 'Home', item: `${SITE_ORIGIN}/` },
+  ...segments.map((seg, i) => ({
+    name: CRUMB_LABELS[seg] ?? seg,
+    item: `${SITE_ORIGIN}/${segments.slice(0, i + 1).join('/')}/`,
+  })),
+];
+const breadcrumbSchema =
+  segments.length > 0
+    ? {
+        '@context': 'https://schema.org',
+        '@type': 'BreadcrumbList',
+        itemListElement: crumbItems.map((c, i) => ({
+          '@type': 'ListItem',
+          position: i + 1,
+          name: c.name,
+          item: c.item,
+        })),
+      }
+    : null;
+
+const allSchemas = [
+  orgSchema,
+  siteSchema,
+  ...(breadcrumbSchema ? [breadcrumbSchema] : []),
+  ...schemas,
+];
+---
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={canonical} />
+    {noindex && <meta name="robots" content="noindex, nofollow" />}
+
+    <title>{fullTitle}</title>
+    <meta name="description" content={description} />
+
+    <!-- Open Graph -->
+    <meta property="og:type" content={ogType} />
+    <meta property="og:site_name" content={SITE_TITLE} />
+    <meta property="og:title" content={fullTitle} />
+    <meta property="og:description" content={description} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:locale" content="en_GB" />
+
+    <!-- Twitter -->
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={fullTitle} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+
+    <link rel="sitemap" href="/sitemap-index.xml" />
+
+    <!-- Fonts: non-blocking, with system fallback in CSS -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+    />
+
+    {allSchemas.map((schema) => <JsonLd schema={schema} />)}
+  </head>
+  <body>
+    <a href="#main" class="skip-link">Skip to content</a>
+    <Header />
+    <main id="main">
+      <slot />
+    </main>
+    <Footer />
+  </body>
+</html>

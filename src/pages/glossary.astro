@@ -1,0 +1,83 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { SITE_ORIGIN } from '../consts';
+
+const terms: { term: string; def: string }[] = [
+  { term: 'Open Knowledge Format (OKF)', def: 'An open specification published by Google Cloud on 12 June 2026 at version 0.1, for representing the metadata, context, and curated knowledge that AI systems need. It is vendor-neutral and designed to be readable by both humans and agents.' },
+  { term: 'OKF bundle', def: 'A directory tree of UTF-8 markdown files that together form a unit of curated knowledge. A bundle requires no database or runtime: it is just a folder you can store in version control, zip, or copy.' },
+  { term: 'Concept document', def: 'Any non-reserved .md file in a bundle. It captures a single concept (such as a table, dataset, metric, playbook, runbook, or API) using YAML frontmatter followed by free-form markdown.' },
+  { term: 'Concept', def: 'The unit of knowledge an OKF document describes. A concept can be anything you capture and want an agent or person to understand, with no constraint on subject matter.' },
+  { term: 'Frontmatter', def: 'The YAML metadata block at the top of every concept document, delimited by triple-dash lines. It holds structured fields such as type, title, and tags that describe the document.' },
+  { term: 'type field', def: 'The single required frontmatter field: a non-empty short string identifying the kind of concept. Type values are not registered centrally, and consumers must tolerate unknown types gracefully.' },
+  { term: 'title', def: 'A recommended optional frontmatter field giving the human-readable name of a concept, for example "Orders table".' },
+  { term: 'description', def: 'A recommended optional frontmatter field providing a short, one-to-two line summary of what the concept is.' },
+  { term: 'resource (resource URI)', def: 'A recommended optional frontmatter field containing a URI that identifies the underlying asset a concept describes, such as a database table or dataset.' },
+  { term: 'tags', def: 'A recommended optional frontmatter field holding a YAML list of labels used to group, filter, or search concepts within a bundle.' },
+  { term: 'timestamp', def: 'A recommended optional frontmatter field holding an ISO 8601 datetime, typically recording when a concept was captured or last updated.' },
+  { term: 'Reserved file', def: 'A filename with special meaning in OKF, namely index.md and log.md. Reserved files must follow their expected structures; all other .md files are treated as concept documents.' },
+  { term: 'index.md', def: 'A reserved file that provides a directory listing and supports progressive disclosure, letting a reader see what a directory contains and drill in selectively rather than loading everything at once.' },
+  { term: 'log.md', def: 'A reserved file that records the update history of a bundle or directory, giving a human-curated, narrative record of what changed and when.' },
+  { term: 'LLM-wiki', def: 'The informal pattern of writing human-authored notes and context for a large language model to read as grounding. OKF formalises this pattern into a portable, interoperable format.' },
+  { term: 'Agent-readable knowledge', def: 'Curated information structured so that AI agents can parse and use it without bespoke SDKs. In OKF this is achieved through predictable YAML frontmatter plus plain markdown.' },
+  { term: 'Progressive disclosure', def: 'The practice of revealing knowledge in layers so a reader loads only what is relevant. In OKF, index.md files enable this by listing available concepts before any are read in full.' },
+  { term: 'Vendor-neutral', def: 'A property of OKF meaning it depends on no single vendor’s tools: no schema registry, no central authority, no required SDK or runtime, and no proprietary account.' },
+  { term: 'Conformance', def: 'The set of conditions that make a bundle valid: every non-reserved file has parseable frontmatter with a non-empty type, reserved files follow their structures, and consumers accept broken links, missing optional fields, and unknown types.' },
+  { term: 'RAG (retrieval-augmented generation)', def: 'A runtime technique that retrieves relevant information and supplies it to a language model at query time. OKF is complementary: a way to author and store curated knowledge that a RAG system can retrieve from, not a retrieval engine itself.' },
+  { term: 'llms.txt', def: 'A convention for signposting a website’s important content to AI systems via a single file. It operates at site level, whereas OKF is a directory-structured format for typed concept knowledge.' },
+  { term: 'Knowledge catalog', def: 'In the OKF context, the Google Cloud repository where the specification and reference implementations are published. More broadly, an organised inventory of an organisation’s data assets and their context.' },
+  { term: 'BigQuery enrichment agent', def: 'A Google reference implementation that walks a BigQuery dataset, drafts an OKF concept document per table or view, then runs a second LLM pass crawling authoritative documentation to enrich each concept.' },
+  { term: 'Static HTML visualiser', def: 'A Google reference implementation that turns an OKF bundle into an interactive graph in the browser, letting people explore concepts and their relationships without specialist software.' },
+  { term: 'Vector database', def: 'A store of embeddings used for similarity search, common in retrieval pipelines. It is an implementation detail rather than a content format; an OKF bundle can be embedded into one, but OKF itself remains human-readable plain text.' },
+  { term: 'Grounding', def: 'Supplying a language model with factual, curated context so its responses are anchored to real source knowledge rather than relying on its parameters alone. OKF exists to make this grounding portable and reviewable.' },
+  { term: 'Context window', def: 'The amount of text a language model can consider at once. Because context windows are finite, OKF’s progressive disclosure via index.md helps keep only relevant concepts loaded.' },
+  { term: 'Markdown', def: 'A lightweight plain-text formatting syntax. OKF uses UTF-8 markdown for concept bodies, which keeps bundles human-readable and diffable in version control.' },
+  { term: 'YAML', def: 'A human-readable data-serialisation syntax used for OKF frontmatter. It encodes structured fields such as type, tags, and timestamp at the top of each concept document.' },
+];
+
+const definedTermSet = {
+  '@context': 'https://schema.org',
+  '@type': 'DefinedTermSet',
+  '@id': `${SITE_ORIGIN}/glossary/#termset`,
+  name: 'Open Knowledge Format Glossary',
+  url: `${SITE_ORIGIN}/glossary/`,
+  hasDefinedTerm: terms.map((t) => ({
+    '@type': 'DefinedTerm',
+    name: t.term,
+    description: t.def,
+    inDefinedTermSet: `${SITE_ORIGIN}/glossary/#termset`,
+  })),
+};
+
+const slug = (s: string) =>
+  s.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+---
+<BaseLayout
+  title="OKF Glossary: Open Knowledge Format Terms"
+  description="Clear, factual definitions of Open Knowledge Format (OKF) terms: bundle, concept document, frontmatter, type field, reserved files, conformance, and more."
+  ogType="article"
+  schemas={[definedTermSet]}
+>
+  <div class="mx-auto max-w-3xl px-4 sm:px-6 pt-8">
+    <nav aria-label="Breadcrumb" class="mb-6 text-sm text-muted">
+      <ol class="flex flex-wrap items-center gap-1">
+        <li><a href="/" class="hover:text-accent">Home</a></li>
+        <li class="flex items-center gap-1"><span aria-hidden="true" class="text-line">/</span><span aria-current="page" class="text-ink-soft">Glossary</span></li>
+      </ol>
+    </nav>
+
+    <header class="mb-8 border-b border-line pb-8">
+      <h1 class="text-3xl sm:text-4xl font-bold tracking-tight text-ink">Open Knowledge Format (OKF) Glossary</h1>
+      <p class="mt-4 text-lg text-ink-soft">A concise, factual glossary of OKF and adjacent terms. Each entry is self-contained. For the full explainer, see <a href="/what-is-open-knowledge-format/" class="text-accent hover:text-accent-ink">What is the Open Knowledge Format</a>.</p>
+      <p class="mt-4 text-xs text-muted">Independent resource, not affiliated with Google.</p>
+    </header>
+
+    <dl class="space-y-6 pb-12">
+      {terms.map((t) => (
+        <div id={slug(t.term)} class="scroll-mt-24 rounded-xl border border-line bg-white/40 p-5">
+          <dt class="font-semibold text-ink">{t.term}</dt>
+          <dd class="mt-2 text-ink-soft">{t.def}</dd>
+        </div>
+      ))}
+    </dl>
+  </div>
+</BaseLayout>

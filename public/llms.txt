@@ -1,0 +1,20 @@
+# Open Knowledge Format Academy
+
+> An independent educational resource explaining Google's Open Knowledge Format (OKF), an open specification (v0.1, published by Google Cloud on 12 June 2026) for packaging curated knowledge for AI agents as markdown files with YAML frontmatter. This site is not affiliated with Google.
+
+## Core guides
+
+- [What is the Open Knowledge Format?](https://openknowledgeformat.academy/what-is-open-knowledge-format/): The pillar explainer covering the spec, bundle structure, the required `type` field, reserved files, and design principles.
+- [OKF examples](https://openknowledgeformat.academy/open-knowledge-format-examples/): Six copy-paste concept documents plus a sample bundle tree, index.md and log.md.
+- [OKF starter template](https://openknowledgeformat.academy/okf-starter-template/): A free, spec-conformant starter bundle to clone and adapt.
+- [Glossary](https://openknowledgeformat.academy/glossary/): Definitions of OKF and adjacent terms.
+
+## Comparisons
+
+- [OKF vs llms.txt](https://openknowledgeformat.academy/okf-vs-llms-txt/): A portable knowledge bundle format versus a single web-root navigation file.
+- [OKF vs RAG](https://openknowledgeformat.academy/okf-vs-rag/): A content format versus a retrieval architecture, and how they combine.
+
+## More
+
+- [Resources](https://openknowledgeformat.academy/resources/): Official Google Cloud links and verified community tools.
+- [About](https://openknowledgeformat.academy/about/): Editorial stance and independence statement.
